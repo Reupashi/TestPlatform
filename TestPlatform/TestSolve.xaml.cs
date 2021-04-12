@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 namespace TestPlatform
 {
     /// <summary>
-    /// Interaction logic for TestSolve.xaml 
+    /// Interaction logic for TestSolve.xaml
     /// </summary>
     public partial class TestSolve : Window
     {
@@ -31,7 +31,6 @@ namespace TestPlatform
         {
             InitializeComponent();
             db = new ApplicationContext(); //Виділення памяті і створення силки database
-
             cmbFontFamily.ItemsSource = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cmbFontSize.ItemsSource = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72 };
         }
