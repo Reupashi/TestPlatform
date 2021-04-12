@@ -25,7 +25,6 @@
                 <MenuItem Header="Save" Click="Save" ></MenuItem>
                 <MenuItem Header="Export" Click="Export" ></MenuItem>
                 <MenuItem Header="Save as test" Click="Save_As_Test" ></MenuItem>
-                
             </MenuItem>
 
             <MenuItem Header="Edit" Height="30">
