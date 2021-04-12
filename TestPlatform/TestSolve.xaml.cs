@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TestPlatform.Entityes;
 
 namespace TestPlatform
 {
@@ -23,9 +25,12 @@ namespace TestPlatform
     {
         ApplicationContext db;
         string savePath;
-        string question;
+        string testName;
+        int test_id;
         bool isExport = false;
         bool isSaveAsTest = false;
+
+        
 
         public TestSolve()
         {
@@ -33,6 +38,7 @@ namespace TestPlatform
             db = new ApplicationContext(); //Виділення памяті і створення сcилки database
             cmbFontFamily.ItemsSource = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cmbFontSize.ItemsSource = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72 };
+            
         }
 
 
@@ -66,16 +72,31 @@ namespace TestPlatform
         }
         private void Is_Save_As_Test(TextRange range)
         {
-            question = range.Text;
-            Test test = new Test(In_teg(range).Text);
-            db.Tests.Add(test);
+            List<Test> tests = db.Tests.ToList();
+            test_id = tests.Count;
+            Question question = new Question(In_teg(range).Text, test_id);
+            db.Questions.Add(question);
             db.SaveChanges();
             isSaveAsTest = true;
             isExport = false;
+            txtBox.SelectAll();
+            txtBox.Cut();
         }
 
         #region editing_buttons
-
+        private void Create_test(object sender, RoutedEventArgs e)
+        {
+            NewTestWindow newTestWindow = new NewTestWindow();
+            if (newTestWindow.ShowDialog() == true)
+            {
+                testName = newTestWindow.testName.Text;
+                Test test = new Test(testName);
+                db.Tests.Add(test);
+                db.SaveChanges();
+                isSaveAsTest = true;
+                isExport = false;
+            }
+        }
         private void Export(object sender, RoutedEventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
@@ -93,7 +114,6 @@ namespace TestPlatform
                             Is_Export(range, fileStream);
 
                             savePath = dlg.FileName;
-
                         }
                     }
                 }
@@ -113,52 +133,42 @@ namespace TestPlatform
             if (dlg.ShowDialog() == true)
                 try
                 {
+                    using (FileStream fileStream = new FileStream(dlg.FileName, FileMode.Create))
                     {
-                        using (FileStream fileStream = new FileStream(dlg.FileName, FileMode.Create))
-                        {
-
-                            TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
-                            range.Save(fileStream, DataFormats.Rtf);
-
-                            savePath = dlg.FileName;
-                            fileStream.Dispose();
-
-                        }
+                        TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
+                        range.Save(fileStream, DataFormats.Rtf);
+                        savePath = dlg.FileName;
+                        fileStream.Dispose();
                     }
                 }
                 catch
-                {
-                    MessageBox.Show("Файл виконується іншою програмою, спробуйте зберегти файл окремо");
-                }
+                {   MessageBox.Show("Файл виконується іншою програмою, спробуйте зберегти файл окремо");}
         }
 
         private void Save(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                FileStream fileStream = new FileStream(savePath, FileMode.Open);
-                TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
                 try
                 {
                     if (isExport == true && isSaveAsTest == false)
                     {
-                        Is_Export(range, fileStream);
+                    FileStream fileStream = new FileStream(savePath, FileMode.Open);
+                    TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
+                    Is_Export(range, fileStream);
                     }
                     else if (isExport == false && isSaveAsTest == true)
                     {
-                        Is_Save_As_Test(range);
+                    TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
+                    Is_Save_As_Test(range);
                     }
                     else
                     {
-                        range.Save(fileStream, DataFormats.Rtf);
+                    FileStream fileStream = new FileStream(savePath, FileMode.Open);
+                    TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
+                    range.Save(fileStream, DataFormats.Rtf);
                         fileStream.Dispose();
                     }
                 }
-                catch { MessageBox.Show("Something goes vrong"); }
-
-            }
-            catch { MessageBox.Show("Спочатку збережіть файл як (CTRL + S)"); }
-
+                catch { MessageBox.Show("Спочатку збережіть файл як (CTRL + S)"); }
         }
 
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -251,16 +261,9 @@ namespace TestPlatform
 
         #endregion
 
-
-
-        private void txtBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-        }
-
-
         private void selected_text(object sender, RoutedEventArgs e)
         {
-            object 
+            object
             temp = txtBox.Selection.GetPropertyValue(Inline.FontWeightProperty);
             btnBold.IsChecked = (temp != DependencyProperty.UnsetValue) && (temp.Equals(FontWeights.Bold));
             temp = txtBox.Selection.GetPropertyValue(Inline.FontStyleProperty);
@@ -275,9 +278,7 @@ namespace TestPlatform
 
 
             if (txtBox_Copy == null) return;
-            txtBox_Copy.Text = string.Format("Виділено : \"{0}\" ",
-
-             txtBox.Selection.Text);
+            txtBox_Copy.Text = string.Format("Виділено : \"{0}\" ", txtBox.Selection.Text);
 
         }
 

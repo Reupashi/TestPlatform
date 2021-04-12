@@ -1,0 +1,26 @@
+﻿<Window x:Class="TestPlatform.NewTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestPlatform"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="NewTestWindow" Height="156.218" Width="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock>Введіть назву тесту</TextBlock>
+        <TextBox Name="testName" Grid.Row="1" MinWidth="250" Margin="0,0,0,33" Grid.RowSpan="2" materialDesign:HintAssist.Hint=" Введіть назву тесту сюди" ></TextBox>
+
+        <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="0,0,10,0" Content="OK"/>
+            <Button IsCancel="True" MinWidth="60" Content="Отмена"/>
+        </WrapPanel>
+
+    </Grid>
+</Window>

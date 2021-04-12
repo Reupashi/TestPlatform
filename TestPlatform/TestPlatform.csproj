@@ -84,7 +84,12 @@
     <Compile Include="AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Entityes\Answear.cs" />
+    <Compile Include="Entityes\Question.cs" />
     <Compile Include="Entityes\Test.cs" />
+    <Compile Include="NewTestWindow.xaml.cs">
+      <DependentUpon>NewTestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TestSolve.xaml.cs">
       <DependentUpon>TestSolve.xaml</DependentUpon>
     </Compile>
@@ -105,6 +110,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewTestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TestSolve.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

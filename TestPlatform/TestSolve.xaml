@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TestPlatform"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="TestPlatform.TestSolve"
         mc:Ignorable="d"
-        Title="TestSolve" Height="481.5" Width="801.5">
+        Title="TestMaker" Height="494.5" Width="801.5">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed" />
         <CommandBinding Command="ApplicationCommands.Save" Executed="Save_Executed" />
@@ -24,7 +24,7 @@
                 <MenuItem Header="Save as text" Command="ApplicationCommands.Save" ></MenuItem>
                 <MenuItem Header="Save" Click="Save" ></MenuItem>
                 <MenuItem Header="Export" Click="Export" ></MenuItem>
-                <MenuItem Header="Save as test" Click="Save_As_Test" ></MenuItem>
+                
             </MenuItem>
 
             <MenuItem Header="Edit" Height="30">
@@ -35,6 +35,11 @@
             <MenuItem Header="View" Height="30">
                 <MenuItem Header="New file"></MenuItem>
                 <MenuItem Header="Open file"></MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="Test" Height="30">
+                <MenuItem Header="Create" Click="Create_test"></MenuItem>
+                <MenuItem Header="Add question" Click="Save_As_Test" ></MenuItem>
             </MenuItem>
 
         </Menu>
@@ -111,34 +116,30 @@
                 <Image Source="/Images/Decrease.png" />
             </Button>-->
 
-            <Button Width="32" Height="32" Padding="0,0,0,0" Margin="2" Click="Button_Click"
-                    ToolTip="d" Background="Yellow">
-
-            </Button>
-
 
         </ToolBar>
 
 
-        <RichTextBox  x:Name="txtBox" HorizontalAlignment="Left" Height="126" Margin="333,120,0,0"  
-                 VerticalAlignment="Top" Width="449" SelectionChanged="selected_text" TextChanged="txtBox_TextChanged"
-                    materialDesign:HintAssist.Hint=" Введіть питання сюди" Padding="5"  />
+        <RichTextBox  x:Name="txtBox" HorizontalAlignment="Left" Height="126" Margin="334,85,0,0"  
+                 VerticalAlignment="Top" Width="449" SelectionChanged="selected_text"
+                    materialDesign:HintAssist.Hint=" Введіть питання сюди" Padding="5" />
 
 
-        <RichTextBox x:Name="Ans1" HorizontalAlignment="Left" Height="32" Margin="334,270,0,0"  VerticalAlignment="Top" Width="448"
+        <RichTextBox x:Name="Ans1" HorizontalAlignment="Left" Height="32" Margin="335,235,0,0"  VerticalAlignment="Top" Width="448"
                   materialDesign:HintAssist.Hint="Відповідь номер 1" Padding="5"/>
 
-        <RichTextBox x:Name="Ans2" HorizontalAlignment="Left" Height="32" Margin="334,322,0,0"  VerticalAlignment="Top" Width="448"
+        <RichTextBox x:Name="Ans2" HorizontalAlignment="Left" Height="32" Margin="335,287,0,0"  VerticalAlignment="Top" Width="448"
                   materialDesign:HintAssist.Hint="Відповідь номер 2" Padding="5"/>
 
-        <RichTextBox x:Name="Ans3" HorizontalAlignment="Left" Height="32" Margin="333,378,0,0"  VerticalAlignment="Top" Width="448"
+        <RichTextBox x:Name="Ans3" HorizontalAlignment="Left" Height="32" Margin="334,343,0,0"  VerticalAlignment="Top" Width="448"
                   materialDesign:HintAssist.Hint="Відповідь номер 3" Padding="5"/>
 
+        <Button Margin="642,380,28,43" Height="Auto" Click="Save_As_Test">Add question</Button>
 
 
         <TextBox x:Name="txtBox_Copy" HorizontalAlignment="Left" Height="36" Margin="0,415,0,0" TextWrapping="Wrap" 
             VerticalAlignment="Top" Width="782" SelectionChanged="selected_text" />
-        
+
 
 
 
