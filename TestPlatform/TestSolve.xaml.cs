@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 namespace TestPlatform
 {
     /// <summary>
-    /// Interaction logic for TestSolve.xaml hjb
+    /// Interaction logic for TestSolve.xaml
     /// </summary>
     public partial class TestSolve : Window
     {
