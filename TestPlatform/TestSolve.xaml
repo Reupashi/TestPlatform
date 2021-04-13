@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestPlatform"
+        xmlns:LLL="clr-namespace:TestPlatform.Entityes"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="TestPlatform.TestSolve"
         mc:Ignorable="d"
         Title="TestMaker" Height="494.5" Width="801.5">
@@ -24,7 +25,7 @@
                 <MenuItem Header="Save as text" Command="ApplicationCommands.Save" ></MenuItem>
                 <MenuItem Header="Save" Click="Save" ></MenuItem>
                 <MenuItem Header="Export" Click="Export" ></MenuItem>
-                
+
             </MenuItem>
 
             <MenuItem Header="Edit" Height="30">
@@ -40,6 +41,7 @@
             <MenuItem Header="Test" Height="30">
                 <MenuItem Header="Create" Click="Create_test"></MenuItem>
                 <MenuItem Header="Add question" Click="Save_As_Test" ></MenuItem>
+                <MenuItem Header="Refresh_list" Click="refresh_list_Click" ></MenuItem>
             </MenuItem>
 
         </Menu>
@@ -107,16 +109,6 @@
             <ComboBox Name="cmbFontSize" Width="50" IsEditable="True" TextBoxBase.TextChanged="cmbFontSize_TextChanged" />
 
             <Separator/>
-
-            <!--<Button Width="32" Height="32" Padding="0,0,0,0" Margin="2" Command="EditingCommands.DecreaseFontSize" >
-                <Image Source="/Images/Increase.png" />
-            </Button>
-
-            <Button Width="32" Height="32" Padding="0,0,0,0" Margin="2" >
-                <Image Source="/Images/Decrease.png" />
-            </Button>-->
-
-
         </ToolBar>
 
 
@@ -140,6 +132,31 @@
         <TextBox x:Name="txtBox_Copy" HorizontalAlignment="Left" Height="36" Margin="0,415,0,0" TextWrapping="Wrap" 
             VerticalAlignment="Top" Width="782" SelectionChanged="selected_text" />
 
+        <!--<ListView x:Name="testsList"  HorizontalAlignment="Left" 
+                 Height="290" Margin="25,85,0,0" VerticalAlignment="Top" Width="295" SelectionChanged="questionsList_SelectionChanged" >
+            <ListView.View>
+                <GridView >
+
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}">Назва тесту</GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>-->
+
+        <TreeView x:Name="testsTree" HorizontalAlignment="Left" Width="310" Margin="10,110,0,43" >
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Tests}">
+                    <TreeViewItem LostFocus="TreeViewItem_LostFocus" GotFocus="TreeViewItem_Focused" Expanded="TreeViewItem_Expanded" Header="{Binding Path=Name}">
+                        <TreeViewItem/>
+                    </TreeViewItem>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <ToolBar HorizontalAlignment="Left" Height="36" Margin="10,74,0,0" VerticalAlignment="Top" Width="300">
+            <Button x:Name="refresh_list" Click="refresh_list_Click"  Width="32" Height="32" Padding="0,0,0,0" Margin="1" ToolTip="Refresh" >
+                <Image Source="/Images/Refresh.png" />
+            </Button>
+        </ToolBar>
 
 
 

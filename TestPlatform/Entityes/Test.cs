@@ -23,7 +23,7 @@ namespace TestPlatform
             get { return name; }
             set { name = value; }
         }
-        
+
         public Test() { }
 
         public Test(string name)

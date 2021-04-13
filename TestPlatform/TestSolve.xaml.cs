@@ -30,7 +30,6 @@ namespace TestPlatform
         bool isExport = false;
         bool isSaveAsTest = false;
 
-        
 
         public TestSolve()
         {
@@ -38,7 +37,11 @@ namespace TestPlatform
             db = new ApplicationContext(); //Виділення памяті і створення сcилки database
             cmbFontFamily.ItemsSource = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cmbFontSize.ItemsSource = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72 };
-            
+
+            List<Test> tests = db.Tests.ToList();
+            testsTree.ItemsSource = tests.ToList();
+
+
         }
 
 
@@ -73,7 +76,6 @@ namespace TestPlatform
         private void Is_Save_As_Test(TextRange range)
         {
             List<Test> tests = db.Tests.ToList();
-            test_id = tests.Count;
             Question question = new Question(In_teg(range).Text, test_id);
             db.Questions.Add(question);
             db.SaveChanges();
@@ -90,12 +92,16 @@ namespace TestPlatform
             if (newTestWindow.ShowDialog() == true)
             {
                 testName = newTestWindow.testName.Text;
+                
                 Test test = new Test(testName);
                 db.Tests.Add(test);
                 db.SaveChanges();
                 isSaveAsTest = true;
                 isExport = false;
+                
             }
+            List<Test> tests = db.Tests.ToList();
+            test_id = tests.Count();
         }
         private void Export(object sender, RoutedEventArgs e)
         {
@@ -279,15 +285,69 @@ namespace TestPlatform
 
             if (txtBox_Copy == null) return;
             txtBox_Copy.Text = string.Format("Виділено : \"{0}\" ", txtBox.Selection.Text);
-
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        #region list_Of_Tests
+
+        private void refresh_list_Click(object sender, RoutedEventArgs e)
         {
+            List<Test> tests = db.Tests.ToList();
+            testsTree.ItemsSource = tests.ToList();
 
         }
 
+        private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
+        {
+            int temp = test_id;
+            TreeViewItem tvItem = (TreeViewItem)sender;
 
+            List<Test> tests = db.Tests.ToList();
+            foreach (Test test in tests)
+            {
+                
+                if(tvItem.Header.ToString() == test.Name)
+                {
+                    test_id = test.test_id;
+
+                }
+            }
+            List<Question> questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+
+            foreach (Question i in questions)
+            { 
+                var item = new TreeViewItem();
+                item.Header = i.Question_Text.ToString();
+               
+                tvItem.Items.Add(item);
+            }
+            test_id = temp;
+        }
+
+        private void TreeViewItem_Focused(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem tvItem = (TreeViewItem)sender;
+
+            List<Test> tests = db.Tests.ToList();
+            foreach (Test test in tests)
+            {
+                if (tvItem.Header.ToString() == test.Name)
+                {
+                    test_id = test.test_id;
+                    Console.WriteLine(test_id);
+                }
+            }
+            tvItem.Background = Brushes.ForestGreen;
+        }
+
+
+
+        #endregion
+
+        private void TreeViewItem_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem tvItem = (TreeViewItem)sender;
+            tvItem.Background = Brushes.White;
+        }
     }
 }
 
