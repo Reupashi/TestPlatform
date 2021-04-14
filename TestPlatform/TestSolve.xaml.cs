@@ -329,23 +329,22 @@ namespace TestPlatform
                 }
             }
             questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+
             int question_id = 0;
-
-
             tvItem.Items.Clear();
-            foreach (Question i in questions)
-            {
 
+            foreach (Question question in questions)
+            {
                 var item = new TreeViewItem();
-                item.Header = i.Question_Text.ToString();
                 item.Tag = question_id;
                 item.AddHandler(TreeViewItem.GotFocusEvent, new RoutedEventHandler(Question_Click));
+                item.Header = question.Question_Text.ToString();
+
                 tvItem.Items.Add(item);
                 question_id += 1;
             }
             test_id = temp;
         }
-
         private void Question_Click(object sender, RoutedEventArgs e)
         {
 
@@ -365,7 +364,6 @@ namespace TestPlatform
                         test_id = test.test_id;
                     }
                 }
-
                 questions = db.Questions.Where(b => b.test_id == test_id).ToList();
 
                 TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
@@ -376,6 +374,7 @@ namespace TestPlatform
 
         }
 
+
         private void TreeViewItem_Focused(object sender, RoutedEventArgs e)
         {
             if (bgSender != null)
@@ -383,7 +382,6 @@ namespace TestPlatform
                 TreeViewItem tvItemBG = (TreeViewItem)bgSender;
                 tvItemBG.Background = Brushes.White;
             }
-
             TreeViewItem tvItem = (TreeViewItem)sender;
 
             List<Test> tests = db.Tests.ToList();
@@ -392,15 +390,12 @@ namespace TestPlatform
                 if (tvItem.Header.ToString() == test.Name)
                 {
                     test_id = test.test_id;
-
                 }
             }
-
             tvItem.Background = Brushes.ForestGreen;
             bgSender = sender;
-
-
         }
+
 
         private void TreeViewItem_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -416,11 +411,8 @@ namespace TestPlatform
                 TreeViewItem tvItem = (TreeViewItem)bgSender;
                 tvItem.Background = Brushes.ForestGreen;
             }
-
         }
-
         #endregion
-        
     }
 }
 
