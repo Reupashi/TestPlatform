@@ -347,7 +347,6 @@ namespace TestPlatform
         }
         private void Question_Click(object sender, RoutedEventArgs e)
         {
-
             try
             {
                 TreeViewItem tvItem = (TreeViewItem)sender;
@@ -371,7 +370,6 @@ namespace TestPlatform
                 range.Text = questions[(int)tvItem.Tag].Question_Text;
             }
             catch { }
-
         }
 
 
