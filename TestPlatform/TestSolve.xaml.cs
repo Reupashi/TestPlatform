@@ -24,6 +24,8 @@ namespace TestPlatform
     public partial class TestSolve : Window
     {
         ApplicationContext db;
+        List<Question> questions;
+        object bgSender;
         string savePath;
         string testName;
         int test_id;
@@ -45,7 +47,7 @@ namespace TestPlatform
         }
 
 
-        public TextRange In_teg (TextRange range) 
+        public TextRange In_teg(TextRange range)
         {
             range.Text = range.Text.Substring(0, range.Text.Length - 2);
             return range;
@@ -79,6 +81,21 @@ namespace TestPlatform
             Question question = new Question(In_teg(range).Text, test_id);
             db.Questions.Add(question);
             db.SaveChanges();
+
+            //using (SQLiteConnection Connect = new SQLiteConnection(@"Data Source=C:\Users\Reihpashi\Desktop\TestPlatform\TestPlatform\LoginsDB.db;
+            //            Version=3;"))
+            //{
+            //    string commandText = "UPDATE [Questions] SET [question_text] = @value WHERE [question_id] = @id";
+            //    SQLiteCommand Command = new SQLiteCommand(commandText, Connect);
+            //    Command.Parameters.AddWithValue("@value", "Aboba");
+            //    Command.Parameters.AddWithValue("@id", 2); // присваиваем переменной номер (id) записи, которую будем обновлять
+            //    Connect.Open();
+            //    // Command.ExecuteNonQuery(); // можно эту строку вместо двух последующих строк
+            //    // Int32 _rowsUpdate = Command.ExecuteNonQuery(); // sql возвращает сколько строк обработано
+            //    // MessageBox.Show("Обновлено строк: " + _rowsUpdate);
+            //    Connect.Close();
+            //}
+
             isSaveAsTest = true;
             isExport = false;
             txtBox.SelectAll();
@@ -92,13 +109,13 @@ namespace TestPlatform
             if (newTestWindow.ShowDialog() == true)
             {
                 testName = newTestWindow.testName.Text;
-                
+
                 Test test = new Test(testName);
                 db.Tests.Add(test);
                 db.SaveChanges();
                 isSaveAsTest = true;
                 isExport = false;
-                
+
             }
             List<Test> tests = db.Tests.ToList();
             test_id = tests.Count();
@@ -148,33 +165,33 @@ namespace TestPlatform
                     }
                 }
                 catch
-                {   MessageBox.Show("Файл виконується іншою програмою, спробуйте зберегти файл окремо");}
+                { MessageBox.Show("Файл виконується іншою програмою, спробуйте зберегти файл окремо"); }
         }
 
         private void Save(object sender, RoutedEventArgs e)
         {
-                try
+            try
+            {
+                if (isExport == true && isSaveAsTest == false)
                 {
-                    if (isExport == true && isSaveAsTest == false)
-                    {
                     FileStream fileStream = new FileStream(savePath, FileMode.Open);
                     TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
                     Is_Export(range, fileStream);
-                    }
-                    else if (isExport == false && isSaveAsTest == true)
-                    {
+                }
+                else if (isExport == false && isSaveAsTest == true)
+                {
                     TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
                     Is_Save_As_Test(range);
-                    }
-                    else
-                    {
+                }
+                else
+                {
                     FileStream fileStream = new FileStream(savePath, FileMode.Open);
                     TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
                     range.Save(fileStream, DataFormats.Rtf);
-                        fileStream.Dispose();
-                    }
+                    fileStream.Dispose();
                 }
-                catch { MessageBox.Show("Спочатку збережіть файл як (CTRL + S)"); }
+            }
+            catch { MessageBox.Show("Спочатку збережіть файл як (CTRL + S)"); }
         }
 
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -214,7 +231,8 @@ namespace TestPlatform
                     Ans3.Cut();
                 }
             }
-            catch {
+            catch
+            {
                 SaveFileDialog dlg = new SaveFileDialog();
                 dlg.Filter = "Rich Text Format (*.rtf)|*.rtf|All files (*.*)|*.*";
                 if (dlg.ShowDialog() == true)
@@ -238,7 +256,7 @@ namespace TestPlatform
                             }
                         }
                     }
-                    catch{}
+                    catch { }
             }
 
         }
@@ -254,16 +272,17 @@ namespace TestPlatform
         private void cmbFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cmbFontFamily.SelectedItem != null)
-                txtBox.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cmbFontFamily.SelectedItem);          
+                txtBox.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cmbFontFamily.SelectedItem);
         }
 
         private void cmbFontSize_TextChanged(object sender, TextChangedEventArgs e)
         {
-            try {
+            try
+            {
                 txtBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cmbFontSize.Text);
-                }
-            catch { }
             }
+            catch { }
+        }
 
         #endregion
 
@@ -304,27 +323,67 @@ namespace TestPlatform
             List<Test> tests = db.Tests.ToList();
             foreach (Test test in tests)
             {
-                
-                if(tvItem.Header.ToString() == test.Name)
+                if (tvItem.Header.ToString() == test.Name)
                 {
                     test_id = test.test_id;
-
                 }
             }
-            List<Question> questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+            questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+            int question_id = 0;
 
+
+            tvItem.Items.Clear();
             foreach (Question i in questions)
-            { 
+            {
+
                 var item = new TreeViewItem();
                 item.Header = i.Question_Text.ToString();
-               
+                item.Tag = question_id;
+                item.AddHandler(TreeViewItem.GotFocusEvent, new RoutedEventHandler(Question_Click));
                 tvItem.Items.Add(item);
+                question_id += 1;
             }
             test_id = temp;
         }
 
+        private void Question_Click(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                TreeViewItem tvItem = (TreeViewItem)sender;
+                // получаю батьківський обєкт дерева
+                var parent = tvItem.Parent;
+                TreeViewItem parentTVI = (TreeViewItem)parent;
+
+                // по заголовку знаходжу айді
+                List<Test> tests = db.Tests.ToList();
+                foreach (Test test in tests)
+                {
+                    if (parentTVI.Header.ToString() == test.Name)
+                    {
+                        test_id = test.test_id;
+                    }
+                }
+
+                questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+
+                TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
+
+                range.Text = questions[(int)tvItem.Tag].Question_Text;
+            }
+            catch { }
+
+        }
+
         private void TreeViewItem_Focused(object sender, RoutedEventArgs e)
         {
+            if (bgSender != null)
+            {
+                TreeViewItem tvItemBG = (TreeViewItem)bgSender;
+                tvItemBG.Background = Brushes.White;
+            }
+
             TreeViewItem tvItem = (TreeViewItem)sender;
 
             List<Test> tests = db.Tests.ToList();
@@ -333,21 +392,35 @@ namespace TestPlatform
                 if (tvItem.Header.ToString() == test.Name)
                 {
                     test_id = test.test_id;
-                    Console.WriteLine(test_id);
+
                 }
             }
+
             tvItem.Background = Brushes.ForestGreen;
+            bgSender = sender;
+
+
         }
-
-
-
-        #endregion
 
         private void TreeViewItem_LostFocus(object sender, RoutedEventArgs e)
         {
             TreeViewItem tvItem = (TreeViewItem)sender;
             tvItem.Background = Brushes.White;
+
         }
+
+        private void txtBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (bgSender != null)
+            {
+                TreeViewItem tvItem = (TreeViewItem)bgSender;
+                tvItem.Background = Brushes.ForestGreen;
+            }
+
+        }
+
+        #endregion
+        
     }
 }
 

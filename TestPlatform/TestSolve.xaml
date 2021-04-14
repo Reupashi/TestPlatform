@@ -41,7 +41,7 @@
             <MenuItem Header="Test" Height="30">
                 <MenuItem Header="Create" Click="Create_test"></MenuItem>
                 <MenuItem Header="Add question" Click="Save_As_Test" ></MenuItem>
-                <MenuItem Header="Refresh_list" Click="refresh_list_Click" ></MenuItem>
+                <MenuItem Header="Refresh list" Click="refresh_list_Click" ></MenuItem>
             </MenuItem>
 
         </Menu>
@@ -112,7 +112,7 @@
         </ToolBar>
 
 
-        <RichTextBox  x:Name="txtBox" HorizontalAlignment="Left" Height="126" Margin="334,85,0,0"  
+        <RichTextBox GotFocus="txtBox_GotFocus"  x:Name="txtBox" HorizontalAlignment="Left" Height="126" Margin="334,85,0,0"  
                  VerticalAlignment="Top" Width="449" SelectionChanged="selected_text"
                     materialDesign:HintAssist.Hint=" Введіть питання сюди" Padding="5" />
 
