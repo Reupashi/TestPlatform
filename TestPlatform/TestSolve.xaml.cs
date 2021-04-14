@@ -24,6 +24,8 @@ namespace TestPlatform
     public partial class TestSolve : Window
     {
         ApplicationContext db;
+        List<Question> questions;
+        object bgSender;
         string savePath;
         string testName;
         int test_id;
@@ -303,28 +305,43 @@ namespace TestPlatform
 
             List<Test> tests = db.Tests.ToList();
             foreach (Test test in tests)
-            {
-                
+            { 
                 if(tvItem.Header.ToString() == test.Name)
                 {
                     test_id = test.test_id;
 
                 }
             }
-            List<Question> questions = db.Questions.Where(b => b.test_id == test_id).ToList();
-
+            questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+            int tag = 0;
             foreach (Question i in questions)
-            { 
+            {
+                
                 var item = new TreeViewItem();
                 item.Header = i.Question_Text.ToString();
-               
+                item.Tag = tag;
+                item.AddHandler(TreeViewItem.GotFocusEvent, new RoutedEventHandler(Question_Click));
                 tvItem.Items.Add(item);
+                tag += 1;
+                
             }
             test_id = temp;
         }
 
+        private void Question_Click(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem tvItem = (TreeViewItem)sender;
+            txtBox.Selection.Text = questions[(int)tvItem.Tag].Question_Text;
+        }
+
         private void TreeViewItem_Focused(object sender, RoutedEventArgs e)
         {
+            if (bgSender != null)
+            {
+                TreeViewItem tvItemBG = (TreeViewItem)bgSender;
+                tvItemBG.Background = Brushes.White;
+            }
+
             TreeViewItem tvItem = (TreeViewItem)sender;
 
             List<Test> tests = db.Tests.ToList();
@@ -333,21 +350,35 @@ namespace TestPlatform
                 if (tvItem.Header.ToString() == test.Name)
                 {
                     test_id = test.test_id;
-                    Console.WriteLine(test_id);
+                    
                 }
             }
             tvItem.Background = Brushes.ForestGreen;
+            bgSender = sender;
+
         }
-
-
-
-        #endregion
 
         private void TreeViewItem_LostFocus(object sender, RoutedEventArgs e)
         {
             TreeViewItem tvItem = (TreeViewItem)sender;
             tvItem.Background = Brushes.White;
         }
+
+        private void txtBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (bgSender != null)
+            {
+                TreeViewItem tvItem = (TreeViewItem)bgSender;
+                tvItem.Background = Brushes.ForestGreen;
+            }
+            
+        } 
+
+        private void question_To_txtBox()
+        {
+            txtBox.Selection.Text = questions[1].Question_Text;
+        }
+        #endregion
     }
 }
 
