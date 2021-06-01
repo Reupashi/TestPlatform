@@ -87,6 +87,12 @@
     <Compile Include="Entityes\Answear.cs" />
     <Compile Include="Entityes\Question.cs" />
     <Compile Include="Entityes\Test.cs" />
+    <Compile Include="ForStudent.xaml.cs">
+      <DependentUpon>ForStudent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestSelect.xaml.cs">
+      <DependentUpon>TestSelect.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewTestWindow.xaml.cs">
       <DependentUpon>NewTestWindow.xaml</DependentUpon>
     </Compile>
@@ -95,6 +101,14 @@
     </Compile>
     <Compile Include="Entityes\User.cs" />
     <Page Include="AuthWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ForStudent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestSelect.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -179,6 +193,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Delete_test.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

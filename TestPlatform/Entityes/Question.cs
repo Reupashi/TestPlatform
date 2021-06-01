@@ -28,5 +28,11 @@ namespace TestPlatform.Entityes
             this.question_text = question_text;
             this.test_id = test_id;
         }
+        public Question(string question_text, int test_id, int question_id)
+        {
+            this.question_id = question_id;
+            this.question_text = question_text;
+            this.test_id = test_id;
+        }
     }
 }

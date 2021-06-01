@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TestPlatform"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="NewTestWindow" Height="156.218" Width="800">
+        Title="NewTestWindow" Height="218.193" Width="800">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -17,10 +17,11 @@
         <TextBlock>Введіть назву тесту</TextBlock>
         <TextBox Name="testName" Grid.Row="1" MinWidth="250" Margin="0,0,0,33" Grid.RowSpan="2" materialDesign:HintAssist.Hint=" Введіть назву тесту сюди" ></TextBox>
 
-        <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="0,0,10,0" Content="OK"/>
-            <Button IsCancel="True" MinWidth="60" Content="Отмена"/>
-        </WrapPanel>
+        <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,15,0,0"/>
+        <TextBlock Margin="0,0,0,-5" Grid.Row="2"><Run Text="Введіть опис тесту"/></TextBlock>
+        <TextBox x:Name="testDescription" Grid.Row="2" MinWidth="250" Margin="0,21,0,-46" materialDesign:HintAssist.Hint=" Введіть назву тесту сюди" />
+        <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="618,67,94,-83" Content="OK" Height="Auto" Grid.Row="2"/>
+        <Button IsCancel="True" MinWidth="60" Content="Отмена" Height="Auto" Margin="688,67,2,-83" Grid.Row="2"/>
 
     </Grid>
 </Window>

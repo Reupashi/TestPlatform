@@ -25,12 +25,18 @@ namespace TestPlatform
     {
         ApplicationContext db;
         List<Question> questions;
+        List<Answear> answears;
         object bgSender;
         string savePath;
         string testName;
         int test_id;
+        int Question_id;
         bool isExport = false;
         bool isSaveAsTest = false;
+
+        int checked_answ1 = 0;
+        int checked_answ2 = 0;
+        int checked_answ3 = 0;
 
 
         public TestSolve()
@@ -42,14 +48,33 @@ namespace TestPlatform
 
             List<Test> tests = db.Tests.ToList();
             testsTree.ItemsSource = tests.ToList();
-
-
         }
 
+        public void ClearForm()
+        {
+            Ans1.SelectAll();
+            Ans1.Cut();
+            Ans2.SelectAll();
+            Ans2.Cut();
+            Ans3.SelectAll();
+            Ans3.Cut();
+            txtBox.SelectAll();
+            txtBox.Cut();
+            ch_1.IsChecked = false;
+            ch_2.IsChecked = false;
+            ch_3.IsChecked = false;
+        }
 
         public TextRange In_teg(TextRange range)
         {
-            range.Text = range.Text.Substring(0, range.Text.Length - 2);
+            if (range.Text.Length !=0)
+            {
+                range.Text = range.Text.Substring(0, range.Text.Length - 2);
+            }
+            else if (range.Text.Length == 0)
+            {
+                range.Text = "";
+            }
             return range;
         }
         private void Is_Export(TextRange range, FileStream fileStream)
@@ -75,11 +100,37 @@ namespace TestPlatform
             isSaveAsTest = false;
 
         }
+
+        private void Is_Save_As_Test(TextRange range, TextRange answ1, TextRange answ2, TextRange answ3 )
+        {
+            List<Test> tests = db.Tests.ToList();
+            Question question = new Question(In_teg(range).Text, test_id);
+            db.Questions.Add(question);
+
+            db.SaveChanges();
+
+            Question_id = question.question_id;
+
+            
+
+            Answear answear1 = new Answear(In_teg(answ1).Text, Question_id, checked_answ1);
+            db.Answears.Add(answear1);
+            Answear answear2 = new Answear(In_teg(answ2).Text, Question_id, checked_answ2);
+            db.Answears.Add(answear2);
+            Answear answear3 = new Answear(In_teg(answ3).Text, Question_id, checked_answ3);
+            db.Answears.Add(answear3);
+
+            db.SaveChanges();
+
+            ClearForm();
+        }
+
         private void Is_Save_As_Test(TextRange range)
         {
             List<Test> tests = db.Tests.ToList();
             Question question = new Question(In_teg(range).Text, test_id);
             db.Questions.Add(question);
+
             db.SaveChanges();
 
             //using (SQLiteConnection Connect = new SQLiteConnection(@"Data Source=C:\Users\Reihpashi\Desktop\TestPlatform\TestPlatform\LoginsDB.db;
@@ -109,8 +160,9 @@ namespace TestPlatform
             if (newTestWindow.ShowDialog() == true)
             {
                 testName = newTestWindow.testName.Text;
+                string testDescription = newTestWindow.testDescription.Text;
 
-                Test test = new Test(testName);
+                Test test = new Test(testName, testDescription);
                 db.Tests.Add(test);
                 db.SaveChanges();
                 isSaveAsTest = true;
@@ -153,19 +205,30 @@ namespace TestPlatform
             dlg.Filter = "Rich Text Format (*.rtf)|*.rtf|All files (*.*)|*.*";
             isExport = false;
             isSaveAsTest = false;
-            if (dlg.ShowDialog() == true)
+            if (dlg.ShowDialog() == true) { 
                 try
                 {
-                    using (FileStream fileStream = new FileStream(dlg.FileName, FileMode.Create))
+                    using (FileStream fileStream = new FileStream(dlg.FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                     {
                         TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
-                        range.Save(fileStream, DataFormats.Rtf);
+                        TextRange answ1 = new TextRange(Ans1.Document.ContentStart, Ans1.Document.ContentEnd);
+                        TextRange answ2 = new TextRange(Ans2.Document.ContentStart, Ans2.Document.ContentEnd);
+                        TextRange answ3 = new TextRange(Ans3.Document.ContentStart, Ans3.Document.ContentEnd);
+                        var text = range.Text + "\n" + answ1.Text + answ2.Text + answ3.Text;
+                        var temp = answ1.Text;
+                        answ1.Text = text;
+
+                        answ1.Save(fileStream, DataFormats.Rtf);
+                        answ1.Text = temp;
+
                         savePath = dlg.FileName;
                         fileStream.Dispose();
                     }
-                }
+                  
+                 }
                 catch
                 { MessageBox.Show("Файл виконується іншою програмою, спробуйте зберегти файл окремо"); }
+            }
         }
 
         private void Save(object sender, RoutedEventArgs e)
@@ -180,8 +243,7 @@ namespace TestPlatform
                 }
                 else if (isExport == false && isSaveAsTest == true)
                 {
-                    TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
-                    Is_Save_As_Test(range);
+                    Save_As_Test(sender, e);
                 }
                 else
                 {
@@ -221,14 +283,7 @@ namespace TestPlatform
                     range.Save(fileStream, DataFormats.Rtf);
                     fileStream.Dispose();
                     savePath = "";
-                    txtBox.SelectAll();
-                    txtBox.Cut();
-                    Ans1.SelectAll();
-                    Ans1.Cut();
-                    Ans2.SelectAll();
-                    Ans2.Cut();
-                    Ans3.SelectAll();
-                    Ans3.Cut();
+                    ClearForm();
                 }
             }
             catch
@@ -245,14 +300,7 @@ namespace TestPlatform
                                 range.Save(fileStream, DataFormats.Rtf);
                                 //save = dlg.FileName;
                                 savePath = "";
-                                txtBox.SelectAll();
-                                txtBox.Cut();
-                                Ans1.SelectAll();
-                                Ans1.Cut();
-                                Ans2.SelectAll();
-                                Ans2.Cut();
-                                Ans3.SelectAll();
-                                Ans3.Cut();
+                                ClearForm();
                             }
                         }
                     }
@@ -263,10 +311,38 @@ namespace TestPlatform
 
         private void Save_As_Test(object sender, RoutedEventArgs e)
         {
-            TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
-            isSaveAsTest = true;
-            isExport = false;
-            Is_Save_As_Test(range);
+            try {
+                TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
+
+                List<Question> questions_names = db.Questions.Where(b => b.test_id == test_id).ToList();
+                foreach (Question question in questions_names)
+                {
+                    if (question.Question_Text.Trim() == range.Text.ToString().Trim())
+                    {
+                        MessageBox.Show("Текст питання не може повторюватись");
+                        return;
+                    }
+                }
+
+                int i = range.Text.Trim().Length;
+                if (i != 0)
+                {
+                    TextRange answ1 = new TextRange(Ans1.Document.ContentStart, Ans1.Document.ContentEnd);
+                    TextRange answ2 = new TextRange(Ans2.Document.ContentStart, Ans2.Document.ContentEnd);
+                    TextRange answ3 = new TextRange(Ans3.Document.ContentStart, Ans3.Document.ContentEnd);
+                    isSaveAsTest = true;
+                    isExport = false;
+                    Is_Save_As_Test(range, answ1, answ2, answ3);
+                    refresh_list_Click(sender, e);
+                }
+                else
+                {
+                    MessageBox.Show("Питання не може бути порожнім");
+                }
+            }
+            catch {
+                MessageBox.Show("Оберіть тест у який бажаєте додати питання");
+            };
         }
 
         private void cmbFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -312,9 +388,47 @@ namespace TestPlatform
         {
             List<Test> tests = db.Tests.ToList();
             testsTree.ItemsSource = tests.ToList();
-
         }
+        private void delete_test_list_Click(object sender, RoutedEventArgs e)
+        {
+            List<Test> tests = db.Tests.Where(b => b.test_id == test_id).ToList();
+            Test test = tests.Find(b => b.test_id == test_id);          
 
+            MessageBoxResult result = MessageBox.Show($"Ви впевнені що хочете видалити тест \"{test.Name}\", без можливості повернення? ", "My App", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    MessageBox.Show($"Tест \"{test.Name}\", видалено", "My App");
+                    List<Question> questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+                    db.Tests.Remove(test);
+                    db.Questions.RemoveRange(questions);
+                    db.SaveChanges();
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+
+            refresh_list_Click(sender, e);
+        }
+        private void delete_question_list_Click(object sender, RoutedEventArgs e)
+                {
+                    List<Question> questions = db.Questions.Where(b => b.question_id == Question_id).ToList();
+                    Question question = questions.Find(b => b.question_id == Question_id);          
+
+                    MessageBoxResult result = MessageBox.Show($"Ви впевнені що хочете видалити питання \"{question.Question_Text}\", без можливості повернення? ", "My App", MessageBoxButton.YesNo);
+                    switch (result)
+                    {
+                        case MessageBoxResult.Yes:
+                            MessageBox.Show($"Питання \"{question.Question_Text}\", видалено", "My App");
+                            db.Questions.Remove(question);
+                            db.SaveChanges();
+                            break;
+                        case MessageBoxResult.No:
+                            break;
+                    }
+
+                    refresh_list_Click(sender, e);
+                }
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
             int temp = test_id;
@@ -339,6 +453,7 @@ namespace TestPlatform
                 item.Tag = question_id;
                 item.AddHandler(TreeViewItem.GotFocusEvent, new RoutedEventHandler(Question_Click));
                 item.Header = question.Question_Text.ToString();
+                item.ToolTip = item.Tag;
 
                 tvItem.Items.Add(item);
                 question_id += 1;
@@ -349,12 +464,16 @@ namespace TestPlatform
         {
             try
             {
+                ClearForm();
+
                 TreeViewItem tvItem = (TreeViewItem)sender;
+
                 // получаю батьківський обєкт дерева
                 var parent = tvItem.Parent;
                 TreeViewItem parentTVI = (TreeViewItem)parent;
 
-                // по заголовку знаходжу айді
+
+                // по заголовку знаходжу айді тесту
                 List<Test> tests = db.Tests.ToList();
                 foreach (Test test in tests)
                 {
@@ -363,13 +482,78 @@ namespace TestPlatform
                         test_id = test.test_id;
                     }
                 }
+                // Знаходимо айді питання
+                List<Question> questions1 = db.Questions.Where(b => b.test_id == test_id).ToList();
+                foreach (Question question in questions1)
+                {
+                    if (tvItem.Header.ToString() == question.Question_Text)
+                    {
+                        Question_id = question.question_id;
+                    }
+                };
+
                 questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+                answears = db.Answears.Where(b => b.question_id == Question_id).ToList();
 
                 TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
+                TextRange answ1 = new TextRange(Ans1.Document.ContentStart, Ans1.Document.ContentEnd);
+                TextRange answ2 = new TextRange(Ans2.Document.ContentStart, Ans2.Document.ContentEnd);
+                TextRange answ3 = new TextRange(Ans3.Document.ContentStart, Ans3.Document.ContentEnd);
 
                 range.Text = questions[(int)tvItem.Tag].Question_Text;
+                answ1.Text = answears[0].Answeare;
+                answ2.Text = answears[1].Answeare;
+                answ3.Text = answears[2].Answeare;
+
+                if (answears[0].Right == 1)
+                { ch_1.IsChecked = true; }
+                else { ch_1.IsChecked = false; };
+
+                if (answears[1].Right == 1)
+                { ch_2.IsChecked = true; }
+                else { ch_2.IsChecked = false; };
+
+                if (answears[2].Right == 1)
+                { ch_3.IsChecked = true; }
+                else { ch_3.IsChecked = false; };
             }
-            catch { }
+            catch 
+            {
+                MessageBox.Show("Даний тест не містить питань");
+                ClearForm();
+
+                TreeViewItem tvItem = (TreeViewItem)sender;
+
+                // получаю батьківський обєкт дерева
+                var parent = tvItem.Parent;
+                TreeViewItem parentTVI = (TreeViewItem)parent;
+
+
+                // по заголовку знаходжу айді тесту
+                List<Test> tests = db.Tests.ToList();
+                foreach (Test test in tests)
+                {
+                    if (parentTVI.Header.ToString() == test.Name)
+                    {
+                        test_id = test.test_id;
+                    }
+                }
+                // Знаходимо айді питання
+                List<Question> questions1 = db.Questions.Where(b => b.test_id == test_id).ToList();
+                foreach (Question question in questions1)
+                {
+                    if (tvItem.Header.ToString() == question.Question_Text)
+                    {
+                        Question_id = question.question_id;
+                    }
+                };
+
+                questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+                TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
+
+
+            }
+
         }
 
 
@@ -411,6 +595,32 @@ namespace TestPlatform
             }
         }
         #endregion
+
+        private void RadioButton1_Checked(object sender, RoutedEventArgs e)
+        {
+            checked_answ1 = 1;
+            checked_answ2 = 0;
+            checked_answ3 = 0;
+        }
+        private void RadioButton2_Checked(object sender, RoutedEventArgs e)
+        {
+            checked_answ1 = 0;
+            checked_answ2 = 1;
+            checked_answ3 = 0;
+        }
+        private void RadioButton3_Checked(object sender, RoutedEventArgs e)
+        {
+            checked_answ1 = 0;
+            checked_answ2 = 0;
+            checked_answ3 = 1;
+        }
+
+        private void open_Window_Click(object sender, RoutedEventArgs e)
+        {
+            TestSelect TS = new TestSelect();
+            TS.Show();
+            this.Close();
+        }
     }
 }
 

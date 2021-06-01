@@ -42,6 +42,7 @@
                 <MenuItem Header="Create" Click="Create_test"></MenuItem>
                 <MenuItem Header="Add question" Click="Save_As_Test" ></MenuItem>
                 <MenuItem Header="Refresh list" Click="refresh_list_Click" ></MenuItem>
+                <MenuItem Header="Пройти тести" Click="open_Window_Click" ></MenuItem>
             </MenuItem>
 
         </Menu>
@@ -142,7 +143,7 @@
             </ListView.View>
         </ListView>-->
 
-        <TreeView x:Name="testsTree" HorizontalAlignment="Left" Width="310" Margin="10,110,0,43" >
+        <TreeView x:Name="testsTree" HorizontalAlignment="Left" Width="296" Margin="10,110,0,43" >
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Tests}">
                     <TreeViewItem LostFocus="TreeViewItem_LostFocus" GotFocus="TreeViewItem_Focused" Expanded="TreeViewItem_Expanded" Header="{Binding Path=Name}">
@@ -152,11 +153,30 @@
             </TreeView.ItemTemplate>
         </TreeView>
 
-        <ToolBar HorizontalAlignment="Left" Height="36" Margin="10,74,0,0" VerticalAlignment="Top" Width="300">
+        <ToolBar HorizontalAlignment="Left" Height="41" Margin="10,69,0,0" VerticalAlignment="Top" Width="300">
             <Button x:Name="refresh_list" Click="refresh_list_Click"  Width="32" Height="32" Padding="0,0,0,0" Margin="1" ToolTip="Refresh" >
                 <Image Source="/Images/Refresh.png" />
             </Button>
+            <Separator Width="31" Style="{DynamicResource MaterialDesignLightSeparator}" Background="Black" RenderTransformOrigin="0.492,1.875" Margin="0,14" Height="Auto">
+                <Separator.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform X="11.248" Y="-10.752"/>
+                    </TransformGroup>
+                </Separator.RenderTransform>
+            </Separator>
+            <Button x:Name="delete_test" Click="delete_test_list_Click"  Width="32" Height="32" Padding="0,0,0,0" Margin="1" ToolTip="Delete_TEST" >
+                <Image Source="/Images/Delete_test.png" />
+            </Button>
+            <Button x:Name="delete_question" Click="delete_question_list_Click"  Width="32" Height="32" Padding="0,0,0,0" Margin="1" ToolTip="Delete_question" >
+                <Image Source="/Images/Delete.png" />
+            </Button>
         </ToolBar>
+        <RadioButton x:Name="ch_1" Checked="RadioButton1_Checked" GroupName="answ" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="311,238,0,0" RenderTransformOrigin="-0.045,0.056"/>
+        <RadioButton x:Name="ch_2" Checked="RadioButton1_Checked" GroupName="answ" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="311,290,0,0"/>
+        <RadioButton x:Name="ch_3" Checked="RadioButton3_Checked" GroupName="answ" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="311,346,0,0"/>
 
 
 

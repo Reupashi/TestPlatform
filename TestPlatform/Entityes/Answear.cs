@@ -11,21 +11,30 @@ namespace TestPlatform.Entityes
     [Table("Answeares")]
     class Answear
     {
+        private int right = 0;
+        public int Right
+        {
+            get { return right; }
+            set { right = value; }
+        }
+
         public int question_id { get; set; }
 
         [Key]
-        public int answear_id { get; set; }
+        public int answeare_id { get; set; }
 
-        private string answear_text;
-        public string Answear_Text
+        private string answeare;
+        public string Answeare
         {
-            get { return answear_text; }
-            set { answear_text = value; }
+            get { return answeare; }
+            set { answeare = value; }
         }
         public Answear() { }
-        public Answear(string answear_text)
+        public Answear(string answeare, int question_id, int right)
         {
-            this.answear_text = answear_text;
+            this.right = right;
+            this.answeare = answeare;
+            this.question_id = question_id;
         }
     }
 }
