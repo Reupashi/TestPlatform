@@ -97,6 +97,7 @@ namespace TestPlatform
             checked_answ2 = 0;
             checked_answ3 = 0;
 
+
         }
 
         private void next_Click(object sender, RoutedEventArgs e)
@@ -110,11 +111,13 @@ namespace TestPlatform
             else
             {
                 points += checked_answ1 * answears[0].Right;
+
                 Console.WriteLine("p1/" + checked_answ1 * answears[0].Right);              
                 points += checked_answ2 * answears[1].Right;
                 Console.WriteLine("p2/" + checked_answ2 * answears[1].Right);               
                 points += checked_answ3 * answears[2].Right;
                 Console.WriteLine("p3/" + checked_answ3 * answears[2].Right);
+
                 ch_1.IsChecked = false;
                 ch_2.IsChecked = false;
                 ch_3.IsChecked = false;
