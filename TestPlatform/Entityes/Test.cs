@@ -15,19 +15,24 @@ namespace TestPlatform
     {
         [Key]
         public int test_id { get; set; }
+        private string description;
+        public string Description
+        {
+            get { return description; }
+            set { description = value; }
+        }
 
         private string name;
-
         public string Name 
         {
             get { return name; }
             set { name = value; }
         }
-
         public Test() { }
 
-        public Test(string name)
+        public Test(string name, string description)
         { //Констуруктор 
+            this.description = description;
             this.name = name;
         }
 
