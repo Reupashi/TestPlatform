@@ -161,8 +161,9 @@ namespace TestPlatform
             {
                 testName = newTestWindow.testName.Text;
                 string testDescription = newTestWindow.testDescription.Text;
-
-                Test test = new Test(testName, testDescription);
+                int time = 1800;
+                int.TryParse(newTestWindow.time_for_test.Text, out time);
+                Test test = new Test(testName, testDescription, time);
                 db.Tests.Add(test);
                 db.SaveChanges();
                 isSaveAsTest = true;
@@ -400,9 +401,19 @@ namespace TestPlatform
                 case MessageBoxResult.Yes:
                     MessageBox.Show($"Tест \"{test.Name}\", видалено", "My App");
                     List<Question> questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+                    List<Answear> answears;
+
                     db.Tests.Remove(test);
                     db.Questions.RemoveRange(questions);
                     db.SaveChanges();
+
+                    foreach(Question question in questions)
+                    {
+                        answears = db.Answears.Where(b => b.question_id == question.question_id).ToList();
+                        db.Answears.RemoveRange(answears);
+                        db.SaveChanges();
+                    }
+
                     break;
                 case MessageBoxResult.No:
                     break;
@@ -411,24 +422,25 @@ namespace TestPlatform
             refresh_list_Click(sender, e);
         }
         private void delete_question_list_Click(object sender, RoutedEventArgs e)
-                {
-                    List<Question> questions = db.Questions.Where(b => b.question_id == Question_id).ToList();
-                    Question question = questions.Find(b => b.question_id == Question_id);          
+        {
+            List<Question> questions = db.Questions.Where(b => b.question_id == Question_id).ToList();
+            Question question = questions.Find(b => b.question_id == Question_id);
+            List<Answear> answears = db.Answears.Where(b => b.question_id == Question_id).ToList();
 
-                    MessageBoxResult result = MessageBox.Show($"Ви впевнені що хочете видалити питання \"{question.Question_Text}\", без можливості повернення? ", "My App", MessageBoxButton.YesNo);
-                    switch (result)
-                    {
-                        case MessageBoxResult.Yes:
-                            MessageBox.Show($"Питання \"{question.Question_Text}\", видалено", "My App");
-                            db.Questions.Remove(question);
-                            db.SaveChanges();
-                            break;
-                        case MessageBoxResult.No:
-                            break;
-                    }
-
-                    refresh_list_Click(sender, e);
-                }
+            MessageBoxResult result = MessageBox.Show($"Ви впевнені що хочете видалити питання \"{question.Question_Text}\", без можливості повернення? ", "My App", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    MessageBox.Show($"Питання \"{question.Question_Text}\", видалено", "My App");
+                    db.Questions.Remove(question);
+                    db.Answears.RemoveRange(answears);
+                    db.SaveChanges();
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+            refresh_list_Click(sender, e);
+        }
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
             int temp = test_id;
@@ -621,6 +633,7 @@ namespace TestPlatform
             TS.Show();
             this.Close();
         }
+
     }
 }
 

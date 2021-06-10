@@ -21,6 +21,12 @@ namespace TestPlatform
             get { return description; }
             set { description = value; }
         }
+        private int time = 0;
+        public int Time
+        {
+            get { return time; }
+            set { time = value; }
+        }
 
         private string name;
         public string Name 
@@ -30,10 +36,11 @@ namespace TestPlatform
         }
         public Test() { }
 
-        public Test(string name, string description)
+        public Test(string name, string description, int time)
         { //Констуруктор 
             this.description = description;
             this.name = name;
+            this.time = time;
         }
 
 

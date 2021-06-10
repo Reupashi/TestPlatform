@@ -33,13 +33,9 @@
                 <MenuItem Header="Redo" CommandTarget="{Binding ElementName=txtBox}" Command="Redo"></MenuItem>
             </MenuItem>
 
-            <MenuItem Header="View" Height="30">
-                <MenuItem Header="New file"></MenuItem>
-                <MenuItem Header="Open file"></MenuItem>
-            </MenuItem>
-
             <MenuItem Header="Test" Height="30">
                 <MenuItem Header="Create" Click="Create_test"></MenuItem>
+                <MenuItem Header="Видалити тести" Click="delete_test_list_Click" ></MenuItem>
                 <MenuItem Header="Add question" Click="Save_As_Test" ></MenuItem>
                 <MenuItem Header="Refresh list" Click="refresh_list_Click" ></MenuItem>
                 <MenuItem Header="Пройти тести" Click="open_Window_Click" ></MenuItem>
@@ -127,7 +123,7 @@
         <RichTextBox x:Name="Ans3" HorizontalAlignment="Left" Height="32" Margin="334,343,0,0"  VerticalAlignment="Top" Width="448"
                   materialDesign:HintAssist.Hint="Відповідь номер 3" Padding="5"/>
 
-        <Button Margin="642,380,28,43" Height="Auto" Click="Save_As_Test">Add question</Button>
+        <Button IsDefault="True" Margin="643,388,27,35" Height="Auto" Click="Save_As_Test">Add question</Button>
 
 
         <TextBox x:Name="txtBox_Copy" HorizontalAlignment="Left" Height="36" Margin="0,415,0,0" TextWrapping="Wrap" 
@@ -177,6 +173,7 @@
         <RadioButton x:Name="ch_1" Checked="RadioButton1_Checked" GroupName="answ" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="311,238,0,0" RenderTransformOrigin="-0.045,0.056"/>
         <RadioButton x:Name="ch_2" Checked="RadioButton1_Checked" GroupName="answ" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="311,290,0,0"/>
         <RadioButton x:Name="ch_3" Checked="RadioButton3_Checked" GroupName="answ" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="311,346,0,0"/>
+
 
 
 

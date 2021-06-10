@@ -20,8 +20,10 @@
         <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,15,0,0"/>
         <TextBlock Margin="0,0,0,-5" Grid.Row="2"><Run Text="Введіть опис тесту"/></TextBlock>
         <TextBox x:Name="testDescription" Grid.Row="2" MinWidth="250" Margin="0,21,0,-46" materialDesign:HintAssist.Hint=" Введіть назву тесту сюди" />
-        <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="618,67,94,-83" Content="OK" Height="Auto" Grid.Row="2"/>
-        <Button IsCancel="True" MinWidth="60" Content="Отмена" Height="Auto" Margin="688,67,2,-83" Grid.Row="2"/>
+        <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="620,73,92,-89" Content="OK" Height="Auto" Grid.Row="2"/>
+        <Button IsCancel="True" MinWidth="60" Content="Отмена" Height="Auto" Margin="690,73,0,-89" Grid.Row="2"/>
+        <TextBox x:Name="time_for_test" HorizontalAlignment="Left" Height="32" Margin="0,73,0,-82"  VerticalAlignment="Top" Width="214"
+            materialDesign:HintAssist.Hint="Час для виконання тесту в секундах" Padding="5" Grid.Row="2"/>
 
     </Grid>
 </Window>

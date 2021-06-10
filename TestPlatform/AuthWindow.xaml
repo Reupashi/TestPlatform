@@ -1,4 +1,4 @@
-﻿<Window x:Class="TestPlatform.AuthWindow"
+﻿<Window ResizeMode="NoResize"  x:Class="TestPlatform.AuthWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
         Title="Авторизація" Height="357.126" Width="460.399">
     <Grid Background="#ffdadada" Margin="0,0,2,2">
 
-        <Border MinWidth="400" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="25">
+        <Border MinWidth="400" Margin="0,29,15,29" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="25" HorizontalAlignment="Right" Width="420">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
             </Border.Effect>
@@ -19,10 +19,10 @@
                 <TextBox x:Name="Login" HorizontalAlignment="Left" Height="27" Margin="10,28,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="349"  materialDesign:HintAssist.Hint="Введіть логін" />
                 <TextBlock HorizontalAlignment="Left" Height="23" Margin="10,0,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Пароль" VerticalAlignment="Top" Width="349"/>
                 <PasswordBox x:Name="Password" HorizontalAlignment="Left" Height="27" Margin="10,28,0,0" Grid.Row="2" VerticalAlignment="Top" Width="349" materialDesign:HintAssist.Hint="Введіть пароль"/>
-
-                <Button  Click="Auth_Button_Click" x:Name="LoginButton" Content="Авторизуватись" HorizontalAlignment="Left" Height="28" Margin="10,22,0,0" VerticalAlignment="Top" Width="349" RenderTransformOrigin="3.144,1.979"/>
+                <Button  Click="Auth_Button_Click" x:Name="LoginButton" Content="Авторизуватись" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="349" RenderTransformOrigin="3.144,1.979"/>
             </StackPanel>
         </Border>
+        <Button Style="{DynamicResource MaterialDesignToolForegroundButton}"  Click="Login_Button_Click" x:Name="CreateButton" Content="Створити акаунт" HorizontalAlignment="Left" Height="28" Margin="277,0,0,0" VerticalAlignment="Top" Width="173" RenderTransformOrigin="0.917,0.551"/>
 
 
     </Grid>

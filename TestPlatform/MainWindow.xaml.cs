@@ -26,7 +26,8 @@ namespace TestPlatform
         string login;
         string password;
         string rep_password;
-        string email;
+        string email, name, surname, group;
+        int isAdmin;
 
         public MainWindow()
         {
@@ -46,6 +47,10 @@ namespace TestPlatform
             password = Password.Password.Trim();
             rep_password = Rep_password.Password.Trim();
             email = Email.Text.ToLower().Trim();
+            name = Name.Text.Trim();
+            surname = Surname.Text.Trim();
+            group = Group.Text.Trim();
+
 
             if (login.Length < 5) //Валідація полів вводу
             {
@@ -67,6 +72,21 @@ namespace TestPlatform
                 Email.ToolTip = "Не по патерну пошти";
                 Email.Background = Brushes.IndianRed;
             }
+            else if (name.Length < 2 )
+            {
+                Name.ToolTip = "Імя не може бути меньшим 2 символів";
+                Name.Background = Brushes.IndianRed;
+            }
+            else if (surname.Length < 2)
+            {
+                Surname.ToolTip = "Прізвище не може бути меньшим 2 символів";
+                Surname.Background = Brushes.IndianRed;
+            }
+            else if (group.Length < 2)
+            {
+                Group.ToolTip = "Назва не може бути меньшим 2 символів";
+                Group.Background = Brushes.IndianRed;
+            }
             else
             {
                 Login.ToolTip = "";
@@ -77,24 +97,32 @@ namespace TestPlatform
                 Rep_password.Background = Brushes.Transparent;
                 Email.ToolTip = "";
                 Email.Background = Brushes.Transparent;
+                Name.ToolTip = "";
+                Name.Background = Brushes.Transparent;
+                Surname.ToolTip = "";
+                Surname.Background = Brushes.Transparent;
+                Group.ToolTip = "";
+                Group.Background = Brushes.Transparent;
 
                 try
                 {
-                    User user = new User(login, password, email);
+                    User user = new User(login, password, email, name, surname, group, 0);
                     db.Users.Add(user);
                     db.SaveChanges();
+                    MessageBox.Show("Ви успішно зареєстровані");
+                    AuthWindow authWindow = new AuthWindow();
+                    authWindow.Show();
+                    this.Close();
                 }
                 catch { MessageBox.Show("Даний користувач вже зареєстрований"); }
-
             }
-
         }
 
         private void Auth_Button_Click(object sender, RoutedEventArgs e)
         {
             AuthWindow authWindow = new AuthWindow();
             authWindow.Show();
-            this.Hide();
+            this.Close();
         }
     }
 }
