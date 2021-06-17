@@ -125,34 +125,6 @@ namespace TestPlatform
             ClearForm();
         }
 
-        private void Is_Save_As_Test(TextRange range)
-        {
-            List<Test> tests = db.Tests.ToList();
-            Question question = new Question(In_teg(range).Text, test_id);
-            db.Questions.Add(question);
-
-            db.SaveChanges();
-
-            //using (SQLiteConnection Connect = new SQLiteConnection(@"Data Source=C:\Users\Reihpashi\Desktop\TestPlatform\TestPlatform\LoginsDB.db;
-            //            Version=3;"))
-            //{
-            //    string commandText = "UPDATE [Questions] SET [question_text] = @value WHERE [question_id] = @id";
-            //    SQLiteCommand Command = new SQLiteCommand(commandText, Connect);
-            //    Command.Parameters.AddWithValue("@value", "Aboba");
-            //    Command.Parameters.AddWithValue("@id", 2); // присваиваем переменной номер (id) записи, которую будем обновлять
-            //    Connect.Open();
-            //    // Command.ExecuteNonQuery(); // можно эту строку вместо двух последующих строк
-            //    // Int32 _rowsUpdate = Command.ExecuteNonQuery(); // sql возвращает сколько строк обработано
-            //    // MessageBox.Show("Обновлено строк: " + _rowsUpdate);
-            //    Connect.Close();
-            //}
-
-            isSaveAsTest = true;
-            isExport = false;
-            txtBox.SelectAll();
-            txtBox.Cut();
-        }
-
         #region editing_buttons
         private void Create_test(object sender, RoutedEventArgs e)
         {
@@ -215,7 +187,7 @@ namespace TestPlatform
                         TextRange answ1 = new TextRange(Ans1.Document.ContentStart, Ans1.Document.ContentEnd);
                         TextRange answ2 = new TextRange(Ans2.Document.ContentStart, Ans2.Document.ContentEnd);
                         TextRange answ3 = new TextRange(Ans3.Document.ContentStart, Ans3.Document.ContentEnd);
-                        var text = range.Text + "\n" + answ1.Text + answ2.Text + answ3.Text;
+                        var text = range.Text + "\n" + answ1.Text + answ2.Text + answ3.Text + "---------------------------------------------" + "\n";
                         var temp = answ1.Text;
                         answ1.Text = text;
 
@@ -328,13 +300,27 @@ namespace TestPlatform
                 int i = range.Text.Trim().Length;
                 if (i != 0)
                 {
-                    TextRange answ1 = new TextRange(Ans1.Document.ContentStart, Ans1.Document.ContentEnd);
-                    TextRange answ2 = new TextRange(Ans2.Document.ContentStart, Ans2.Document.ContentEnd);
-                    TextRange answ3 = new TextRange(Ans3.Document.ContentStart, Ans3.Document.ContentEnd);
-                    isSaveAsTest = true;
-                    isExport = false;
-                    Is_Save_As_Test(range, answ1, answ2, answ3);
-                    refresh_list_Click(sender, e);
+                    if (checked_answ1 == checked_answ2 && checked_answ2 == checked_answ3 && checked_answ1 == 0)
+                    {
+                        MessageBox.Show("Ви не позначили жодну відповідь як правильну");
+                    }
+                    else 
+                    { 
+                        TextRange answ1 = new TextRange(Ans1.Document.ContentStart, Ans1.Document.ContentEnd);
+                        TextRange answ2 = new TextRange(Ans2.Document.ContentStart, Ans2.Document.ContentEnd);
+                        TextRange answ3 = new TextRange(Ans3.Document.ContentStart, Ans3.Document.ContentEnd);
+                        isSaveAsTest = true;
+                        isExport = false;
+                        Is_Save_As_Test(range, answ1, answ2, answ3);
+                        refresh_list_Click(sender, e);
+                        checked_answ1 = 0;
+                        checked_answ2 = 0;
+                        checked_answ3 = 0;
+                        ch_1.IsChecked = false;
+                        ch_2.IsChecked = false;
+                        ch_3.IsChecked = false;
+                    }
+
                 }
                 else
                 {
@@ -634,57 +620,27 @@ namespace TestPlatform
             this.Close();
         }
 
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MessageBoxResult result = MessageBox.Show($"Ви справді хочете вийти? ", "My App", MessageBoxButton.YesNo);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        AuthWindow aw = new AuthWindow();
+                        aw.Show();
+                        this.Close();
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                }
+                
+            }
+            catch { }
+
+        }
     }
 }
 
 
-
-
-//private void Save(object sender, RoutedEventArgs e)
-//{
-//    try
-//    {
-//        FileStream fileStream = new FileStream(savePath, FileMode.Open);
-//        TextRange range = new TextRange(txtBox.Document.ContentStart, txtBox.Document.ContentEnd);
-
-//        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//        //if (range.Text.Contains("<Question>"))
-//        //{
-
-//        //    range.Text = range.Text.Remove(0, 11);
-//        //    range.Text = range.Text.Remove(range.Text.IndexOf("</Question>") + 1);
-//        //    //Console.WriteLine("+++++++++++++++++++++++" + now);
-//        //    range.Text = $"<Question> {In_teg(range).Text} </Question>";
-//        //}
-//        //else
-//        //{
-//        //    ///////////////////////////////////////////////txtBox.AppendText(" </Question>");
-
-//        //    range.Text = $"<Question> {In_teg(range).Text} </Question>";
-//        //}
-//        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//        range.Save(fileStream, DataFormats.Rtf);
-//        fileStream.Dispose();
-
-
-//        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//        //if (range.Text.Contains("</Question>"))
-//        //    {
-
-//        //    ////////////////////////////////////////////////////txtBox.Selection.Select(txtBox.Document.ContentEnd.GetPositionAtOffset(12,0), txtBox.Document.ContentEnd);
-//        //    ////////////////////////////////////////////////////txtBox.Cut();
-
-//        //        range.Text = range.Text.Remove(0, 11);
-//        //        range.Text = range.Text.Remove(range.Text.IndexOf(" </Question>"));
-
-//        //    }
-//        //    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//        fileStream.Dispose();
-
-//    }
-//    catch { MessageBox.Show("Спочатку збережіть файл як (CTRL + S)"); }
-
-//}

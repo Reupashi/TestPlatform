@@ -19,7 +19,7 @@
                 <TextBox x:Name="Login" HorizontalAlignment="Left" Height="27" Margin="10,28,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="349"  materialDesign:HintAssist.Hint="Введіть логін" />
                 <TextBlock HorizontalAlignment="Left" Height="23" Margin="10,0,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Пароль" VerticalAlignment="Top" Width="349"/>
                 <PasswordBox x:Name="Password" HorizontalAlignment="Left" Height="27" Margin="10,28,0,0" Grid.Row="2" VerticalAlignment="Top" Width="349" materialDesign:HintAssist.Hint="Введіть пароль"/>
-                <Button  Click="Auth_Button_Click" x:Name="LoginButton" Content="Авторизуватись" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="349" RenderTransformOrigin="3.144,1.979"/>
+                <Button IsDefault="True" Click="Auth_Button_Click" x:Name="LoginButton" Content="Авторизуватись" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="349" RenderTransformOrigin="3.144,1.979"/>
             </StackPanel>
         </Border>
         <Button Style="{DynamicResource MaterialDesignToolForegroundButton}"  Click="Login_Button_Click" x:Name="CreateButton" Content="Створити акаунт" HorizontalAlignment="Left" Height="28" Margin="277,0,0,0" VerticalAlignment="Top" Width="173" RenderTransformOrigin="0.917,0.551"/>

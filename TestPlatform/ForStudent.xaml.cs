@@ -3,16 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TestPlatform.Entityes;
 
 
@@ -28,7 +20,7 @@ namespace TestPlatform
         List<Answear> answears;
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         Test test;
-        
+
         int Question_id;
         int test_id;
         int counter = 0;
@@ -51,7 +43,7 @@ namespace TestPlatform
             this.Closing += new CancelEventHandler(MainWindow_Closing);
 
             Log($"______________________________ Тест здає : {chaerackter} ______________________________");
-            
+
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
 
@@ -92,12 +84,12 @@ namespace TestPlatform
         {
             using (StreamWriter logger = new StreamWriter(path, true))
             {
-                logger.WriteLine(DateTime.Now.Date.ToLongDateString()+ " / " + DateTime.Now.ToLongTimeString() + " - " + eventName);
+                logger.WriteLine(DateTime.Now.Date.ToLongDateString() + " / " + DateTime.Now.ToLongTimeString() + " - " + eventName);
             }
         }
         private void Timer(bool work)
         {
-            
+
             if (work == true)
             {
                 dispatcherTimer.Start();
@@ -195,14 +187,14 @@ namespace TestPlatform
                 {
                     question.Text = mixedQuestions[counter].Question_Text;/////////////////
 
-                    Log($"Питання номер {counter+1}: {question.Text}");
+                    Log($"Питання номер {counter + 1}: {question.Text}");
 
                     Question_id = mixedQuestions[counter].question_id;
                     answears = db.Answears.Where(b => b.question_id == Question_id).ToList();
                     ch_1.Content = answears[0].Answeare.ToString();
-                    ch_2.Content = answears[1].Answeare.ToString();                   
+                    ch_2.Content = answears[1].Answeare.ToString();
                     ch_3.Content = answears[2].Answeare.ToString();
-                    
+
                     Console.WriteLine(points);
                 }
                 else
@@ -256,7 +248,7 @@ namespace TestPlatform
 
             }
         }
-        
+
 
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
@@ -280,7 +272,7 @@ namespace TestPlatform
                 return;
             }
         }
-       
+
 
     }
 }

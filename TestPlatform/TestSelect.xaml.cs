@@ -132,10 +132,20 @@ namespace TestPlatform
         {
             if ((int)test_id != -1) 
             {
-            ForStudent forSt = new ForStudent();
-            forSt.testId.Text = this.testId.Text;
-            forSt.Show();
-            this.Close();
+                List<Question> questions = db.Questions.Where(b => b.test_id == test_id).ToList();
+                if (questions.Count !=0)
+                {
+                    ForStudent forSt = new ForStudent();
+                    forSt.testId.Text = this.testId.Text;
+                    forSt.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Даний тест не містить питань, оберіть інший");
+                    return;
+                }
+            
             }
             else
             {

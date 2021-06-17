@@ -40,6 +40,9 @@
                 <MenuItem Header="Refresh list" Click="refresh_list_Click" ></MenuItem>
                 <MenuItem Header="Пройти тести" Click="open_Window_Click" ></MenuItem>
             </MenuItem>
+            <MenuItem Header="Вихід" Height ="30" Click="Exit_Click">
+                
+            </MenuItem>
 
         </Menu>
 
